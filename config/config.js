@@ -1,0 +1,1 @@
+module.exports.TOKEN_SEED = '@este-es@-un-seed-dificil';
