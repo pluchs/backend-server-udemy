@@ -14,7 +14,15 @@ app.use(bodyParser.json());
 // Importar rutas
 var appRoutes = require('./routes/app');
 var usuarioRoutes = require('./routes/usuario');
+var hospitalRoutes = require('./routes/hospital');
+var medicoRoutes = require('./routes/medico');
 var loginRoutes = require('./routes/login');
+var busquedaRoutes = require('./routes/busqueda');
+var uploadRoutes = require('./routes/upload');
+var imagenRoutes = require('./routes/imagen');
+
+
+
 
 // Conexion a la BD
 mongoose.connection.openUri('mongodb://localhost:27017/dbHospital', (error, response) => {
@@ -24,6 +32,11 @@ mongoose.connection.openUri('mongodb://localhost:27017/dbHospital', (error, resp
 });
 
 // Rutas
+app.use('/upload', uploadRoutes);
+app.use('/img', imagenRoutes);
+app.use('/busqueda', busquedaRoutes);
+app.use('/hospital', hospitalRoutes);
+app.use('/medico', medicoRoutes);
 app.use('/usuario', usuarioRoutes);
 app.use('/login', loginRoutes);
 app.use('/', appRoutes);

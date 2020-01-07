@@ -18,20 +18,34 @@ var Usuario = require("../models/usuario");
 */
 
 app.get("/", (request, response, next) => {
-    Usuario.find({}, "nombre email img role").exec((error, usuarios) => {
-        if (error) {
-            return response.status(500).json({
-                ok: false,
-                mensaje: "Error cargando usuario",
-                errors: error
-            });
-        }
 
-        response.status(200).json({
-            ok: true,
-            usuarios: usuarios
+    // este dato viene como parametro en la URL, aqui se captura. || indica qyue si viene vacio, ponga un 0
+    var desde = request.query.desde || 0;
+    desde = Number(desde);
+
+    Usuario.find({}, "nombre email img role")
+        .skip(desde) // Saltar el numero de regsitros determninados por la variable desde
+        .limit(5) // Limitar el numero de resultados que se regresan en la consulta...
+        .exec((error, usuarios) => {
+            if (error) {
+                return response.status(500).json({
+                    ok: false,
+                    mensaje: "Error cargando usuario",
+                    errors: error
+                });
+            }
+
+            // Se mete el resultado de los usuarios dentro de la funcion count para tener el numero de usuarios totales, y estos se van a regresar a la peticion    
+            Usuario.count({}, (error, conteo) => {
+                response.status(200).json({
+                    ok: true,
+                    usuarios: usuarios,
+                    total: conteo
+                });
+            });
+
+
         });
-    });
 });
 
 
